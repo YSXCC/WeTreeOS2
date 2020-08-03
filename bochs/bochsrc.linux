@@ -3,15 +3,18 @@
 # Configuration file for Bochs
 #################################################################
 
+clock: sync=slowddown, time0=local
+cpu: count=1, ips=1000000
+
 # how much memory the emulated machine will have
-megs: 512
+megs: 32
 
 # filenameof ROM images
-romimage:file=E:/Bochs-2.6.11/BIOS-bochs-latest
-vgaromimage:file=E:/Bochs-2.6.11/VGABIOS-lgpl-latest
+romimage:file=/usr/share/bochs/BIOS-bochs-latest
+vgaromimage:file=/usr/share/bochs/VGABIOS-lgpl-latest
 
 # which disk image will be used 这个是启动软盘，我们虚拟出来的那个a.img
-floppya:1_44=a.img, status=inserted
+floppya:1_44=wetree.img, status=inserted
 
 # choose the boot disk 确定启动方式
 boot: floppy
@@ -23,7 +26,8 @@ log: ../bochs/bochsout.txt
 mouse: enabled=0
 
 # enable key mapping ,using US layout as default
-keyboard: keymap=E:/Bochs-2.6.11/keymaps/x11-pc-us.map
+keyboard: keymap=/usr/share/bochs/keymaps/x11-pc-us.map
 
 # display_library: sdl
-display_library: win32, options="windebug"
+display_library: x, options="gui_debug"
+
