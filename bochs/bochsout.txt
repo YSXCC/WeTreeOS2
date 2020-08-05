@@ -33,9 +33,9 @@
 00000000000i[      ]   Sound support: SB16 ES1370
 00000000000i[      ]   USB support: UHCI OHCI EHCI xHCI
 00000000000i[      ]   VGA extension support: vbe cirrus voodoo
-00000000000i[MEM0  ] allocated memory at 0000023823075040. after alignment, vector=0000023823076000
-00000000000i[MEM0  ] 32.00MB
-00000000000i[MEM0  ] mem block size = 0x00020000, blocks=256
+00000000000i[MEM0  ] allocated memory at 0000020EBA5EE040. after alignment, vector=0000020EBA5EF000
+00000000000i[MEM0  ] 64.00MB
+00000000000i[MEM0  ] mem block size = 0x00020000, blocks=512
 00000000000i[MEM0  ] rom at 0xfffe0000/131072 ('E:/Bochs-2.6.11/BIOS-bochs-latest')
 00000000000i[PLUGIN] init_dev of 'pci' plugin device by virtual method
 00000000000i[DEV   ] i440FX PMC present at device 0, function 0
@@ -43,7 +43,7 @@
 00000000000i[DEV   ] PIIX3 PCI-to-ISA bridge present at device 1, function 0
 00000000000i[PLUGIN] init_dev of 'cmos' plugin device by virtual method
 00000000000i[CMOS  ] Using local time for initial clock
-00000000000i[CMOS  ] Setting initial clock to: Mon Aug 03 23:21:52 2020 (time0=1596468112)
+00000000000i[CMOS  ] Setting initial clock to: Wed Aug 05 20:23:36 2020 (time0=1596630216)
 00000000000i[PLUGIN] init_dev of 'dma' plugin device by virtual method
 00000000000i[DMA   ] channel 4 used by cascade
 00000000000i[PLUGIN] init_dev of 'pic' plugin device by virtual method
@@ -189,11 +189,11 @@
 00000318050i[KBD   ] reset-disable command received
 00000320827i[BIOS  ] Starting rombios32
 00000321265i[BIOS  ] Shutdown flag 0
-00000321855i[BIOS  ] ram_size=0x02000000
-00000322277i[BIOS  ] ram_end=32MB
+00000321855i[BIOS  ] ram_size=0x04000000
+00000322277i[BIOS  ] ram_end=64MB
 00000362837i[BIOS  ] Found 1 cpu(s)
 00000376489i[BIOS  ] bios_table_addr: 0x000f9db8 end=0x000fcc00
-00000602220i[WINGUI] dimension update x=720 y=400 fontheight=16 fontwidth=9 bpp=8
+00000612552i[WINGUI] dimension update x=720 y=400 fontheight=16 fontwidth=9 bpp=8
 00000704310i[PCI   ] i440FX PMC write to PAM register 59 (TLB Flush)
 00001032240i[P2ISA ] PCI IRQ routing: PIRQA# set to 0x0b
 00001032259i[P2ISA ] PCI IRQ routing: PIRQB# set to 0x09
@@ -222,8 +222,8 @@
 00001385443i[PCI   ] setting SMRAM control register to 0x0a
 00001412159i[BIOS  ] MP table addr=0x000f9e90 MPC table addr=0x000f9dc0 size=0xc8
 00001414030i[BIOS  ] SMBIOS table addr=0x000f9ea0
-00001416216i[BIOS  ] ACPI tables: RSDP addr=0x000f9fd0 ACPI DATA addr=0x01ff0000 size=0xff8
-00001419463i[BIOS  ] Firmware waking vector 0x1ff00cc
+00001416216i[BIOS  ] ACPI tables: RSDP addr=0x000f9fd0 ACPI DATA addr=0x03ff0000 size=0xff8
+00001419463i[BIOS  ] Firmware waking vector 0x3ff00cc
 00001421943i[PCI   ] i440FX PMC write to PAM register 59 (TLB Flush)
 00001422666i[BIOS  ] bios_table_cur_addr: 0x000f9ff4
 00001551537i[VBIOS ] VGABios $Id: vgabios.c 226 2020-01-02 21:36:23Z vruppert $
@@ -231,23 +231,23 @@
 00001551640i[BXVGA ] VBE known Display Interface b0c5
 00001554283i[VBIOS ] VBE Bios $Id: vbe.c 228 2020-01-02 23:09:02Z vruppert $
 00014040188i[BIOS  ] Booting from 0000:7c00
-00014101323i[      ] dbg: Quit
-00014101323i[CPU0  ] CPU is in real mode (active)
-00014101323i[CPU0  ] CS.mode = 16 bit
-00014101323i[CPU0  ] SS.mode = 16 bit
-00014101323i[CPU0  ] EFER   = 0x00000000
-00014101323i[CPU0  ] | EAX=00000020  EBX=00000100  ECX=00090003  EDX=0000000e
-00014101323i[CPU0  ] | ESP=00007c00  EBP=00007d20  ESI=000e7d1c  EDI=00000128
-00014101323i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt of df if tf sf zf af PF cf
-00014101323i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
-00014101323i[CPU0  ] |  CS:0000( 0004| 0|  0) 00000000 0000ffff 0 0
-00014101323i[CPU0  ] |  DS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00014101323i[CPU0  ] |  SS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00014101323i[CPU0  ] |  ES:9000( 0005| 0|  0) 00090000 0000ffff 0 0
-00014101323i[CPU0  ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00014101323i[CPU0  ] |  GS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00014101323i[CPU0  ] | EIP=00007c99 (00007c99)
-00014101323i[CPU0  ] | CR0=0x60000010 CR2=0x00000000
-00014101323i[CPU0  ] | CR3=0x00000000 CR4=0x00000000
-00014101323i[CMOS  ] Last time is 1596468115 (Mon Aug 03 23:21:55 2020)
-00014101323i[SIM   ] quit_sim called with exit code 0
+00587740000p[WINGUI] >>PANIC<< POWER button turned off.
+00587740000i[CPU0  ] CPU is in protected mode (active)
+00587740000i[CPU0  ] CS.mode = 32 bit
+00587740000i[CPU0  ] SS.mode = 32 bit
+00587740000i[CPU0  ] EFER   = 0x00000000
+00587740000i[CPU0  ] | EAX=e0000f50  EBX=00000400  ECX=00000000  EDX=00000000
+00587740000i[CPU0  ] | ESP=00090afd  EBP=000002a7  ESI=000e029d  EDI=00111000
+00587740000i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt of df if tf SF zf af PF cf
+00587740000i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
+00587740000i[CPU0  ] |  CS:0008( 0001| 0|  0) 00000000 ffffffff 1 1
+00587740000i[CPU0  ] |  DS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+00587740000i[CPU0  ] |  SS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+00587740000i[CPU0  ] |  ES:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+00587740000i[CPU0  ] |  FS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+00587740000i[CPU0  ] |  GS:001b( 0003| 0|  3) 000b8000 0000ffff 0 0
+00587740000i[CPU0  ] | EIP=000903b9 (000903b9)
+00587740000i[CPU0  ] | CR0=0xe0000011 CR2=0x00000000
+00587740000i[CPU0  ] | CR3=0x00100000 CR4=0x00000000
+00587740000i[CMOS  ] Last time is 1596630362 (Wed Aug 05 20:26:02 2020)
+00587740000i[SIM   ] quit_sim called with exit code 1

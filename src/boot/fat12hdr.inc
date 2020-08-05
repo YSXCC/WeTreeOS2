@@ -57,8 +57,7 @@ SectorNoOfRootDirectory	equ	    19
 SectorNoOfFAT1		    equ	    1
 
 ; ----------------------------------------------------------------------------------
-; DeltaSectorNo = BPB_RsvdSecCnt + (BPB_NumFATs * FATSz) - 2
-; 文件的开始Sector号 = DirEntry中的开始Sector号 + 根目录占用Sector数目 + DeltaSectorNo   
-; 文件的开始扇区号，虽然这么注释很傻逼。。。。确实也很傻逼              
+; 文件的开始Sector号 = DirEntry开始偏移扇区号 + RootDirSectors + DeltaSectorNo(19 - 2)   
+; 文件的开始逻辑扇区号，虽然这么注释很傻逼。。。。确实也很傻逼              
 ; ----------------------------------------------------------------------------------
 DeltaSectorNo		    equ	    17

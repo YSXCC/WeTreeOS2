@@ -1,17 +1,17 @@
 ;*******************************
-; FileName: src/boot/bootsect.asm
+; FileName: src/boot/boot.asm
 ; Author: WenShiHuai
 ; CreateDate: 2020/7/27
 ; Describe: 引导程序
 ;*******************************
 
-    org 0x7c00       ; 加载程序到内存-----7c00-----处,ORG是伪指令
+    org 0x7c00       ; 加载程序到内存-----7c00-----处,ORG是伪指令 偏移地址CS:IP=0000:7C00
 
 ;----------------------------------------------------------------------------
 BaseOfStack				equ	07c00h
-BaseOfLoader		    equ	09000h	; LOADER.BIN 被加载到的位置 ----  段地址
-OffsetOfLoader		    equ	0100h	; LOADER.BIN 被加载到的位置 ---- 偏移地址
 ;----------------------------------------------------------------------------
+
+%include	"load.inc"
 
 	jmp short LABEL_START		; Start to boot.
 	nop
@@ -60,11 +60,13 @@ LABEL_SEARCH_IN_ROOT_DIR_BEGIN:
 	mov	di, OffsetOfLoader	; es:di -> BaseOfLoader:0100 = BaseOfLoader*10h+100
 	cld						; 使字符串操作中SI或DI地址指针自动增加，字符串处理由前往后
 	mov	dx, 10h				; 循环的次数 = 512 / 32个文件目录项	
+
 LABEL_SEARCH_FOR_LOADERBIN:	; 寻找loader.bin文件
 	cmp	dx, 0								; 循环次数控制,
 	jz	LABEL_GOTO_NEXT_SECTOR_IN_ROOT_DIR	; 如果已经读完了一个 Sector,就跳到下一个 Sector
 	dec	dx
 	mov	cx, 11		; 查找文件的文件名长度
+
 LABEL_CMP_FILENAME:	; 对比文件名字符串
 	cmp	cx, 0
 	jz	LABEL_FILENAME_FOUND	; 如果比较了 11 个字符都相等, 表示找到
@@ -74,6 +76,7 @@ LABEL_CMP_FILENAME:	; 对比文件名字符串
 	cmp	al, byte [es:di]		; 字节对比
 	jz	LABEL_GO_ON				; 相等就继续对比
 	jmp	LABEL_DIFFERENT			; 只要发现不一样的字符就表明本 DirectoryEntry 不是
+
 LABEL_GO_ON:
 	inc	di
 	jmp	LABEL_CMP_FILENAME		; 继续循环
@@ -98,13 +101,13 @@ LABEL_FILENAME_FOUND:		; 找到 LOADER.BIN，继续找文件数据
 	and	di, 0FFE0h			; di -> 当前条目的开始
 	add	di, 01Ah			; 根目录偏移，此条目对应的开始簇号
 	mov	cx, word [es:di]
-	push	cx				; 保存此 Sector 在 FAT 中的簇号
+	push	cx				; 保存此 Sector 在 FAT 中的簇号(只有簇号信息 >= 0x2h)
 	add	cx, ax
-	add	cx, DeltaSectorNo	; cl <- LOADER.BIN的起始扇区号(0-based)
+	add	cx, DeltaSectorNo	; cl <- LOADER.BIN的起始扇区号(逻辑)
 	mov	ax, BaseOfLoader
 	mov	es, ax				; es <- BaseOfLoader
 	mov	bx, OffsetOfLoader	; bx <- OffsetOfLoader
-	mov	ax, cx				; ax <- Sector 号
+	mov	ax, cx				; ax <- Sector 号（逻辑扇区号）
 
 LABEL_GOON_LOADING_FILE:
 	push	ax
@@ -118,7 +121,7 @@ LABEL_GOON_LOADING_FILE:
 
 	mov	cl, 1
 	call	ReadSector
-	pop	ax					; 取出此 Sector 在 FAT 中的序号
+	pop	ax					; 取出此 Sector 在 FAT 中的序号(簇号)
 	call	GetFATEntry
 	cmp	ax, 0FFFh
 	jz	LABEL_FILE_LOADED
@@ -152,7 +155,7 @@ bOdd				db	0					; 奇数还是偶数
 LoaderFileName		db	"LOADER  BIN", 0	; LOADER.BIN 之文件名
 ; 为简化代码, 下面每个字符串的长度均为 MessageLength
 MessageLength	equ	18
-BootMessage:    db  "Loading System    "	; 18字节, 不够则用空格补齐. 序号 0
+BootMessage:    db  "Booting System    "	; 18字节, 不够则用空格补齐. 序号 0
 Message1		db	"Ready To Load ... "	; 18字节, 不够则用空格补齐. 序号 1
 Message2		db	"No Loader File ..."	; 18字节, 不够则用空格补齐. 序号 2
 
@@ -236,7 +239,7 @@ GetFATEntry:
 	push	bx
 	push	ax
 	mov	ax, BaseOfLoader
-	sub	ax, 0100h		; 在 BaseOfLoader 后面留出 4K 空间用于存放 FAT
+	sub	ax, 0100h		; 在 BaseOfLoader 后面留出 4 * 1024 空间用于存放 FAT
 	mov	es, ax
 	pop	ax
 	mov	byte [bOdd], 0
@@ -266,12 +269,11 @@ LABEL_EVEN:;偶数
 	mov	ax, [es:bx]
 	cmp	byte [bOdd], 1
 	jnz	LABEL_EVEN_2
-	shr	ax, 4
+	shr	ax, 4				; 奇数取高四位（注意对齐方式）
 LABEL_EVEN_2:
-	and	ax, 0FFFh
+	and	ax, 0FFFh			; 偶数取低4位（注意对齐方式）
 
 LABEL_GET_FAT_ENRY_OK:
-
 	pop	bx
 	pop	es
 	ret
